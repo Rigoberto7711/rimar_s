@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}Página Principal{% endblock %}
+{% block content %}
+<div class="container text-center">
+    <div class="border-top my-3"></div>
+    <h1>Plataforma de Control</h1>
+    <div class="border-top my-3"></div>
+</div>
+
+<div class="container my-5">
+    <h4>Acciones a Realizar</h4>
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-action"><a href="{{ url_for('tasas.definir_tasas') }}">Definir Tasas Diaria</a></li>
+        <li class="list-group-item list-group-item-action"><a href="{{ url_for('opwu.operaciones_wu') }}">Operaciones Airpak</a></li>
+    </ul>
+</div>
+
+<div class="container">
+    <h1>Bienvenido a la aplicación</h1>
+    <ul class="list-group">
+        <li class="list-group-item list-group-item-action"><a href="{{ url_for('tasas.calcular_cambio') }}">Consulta Mesa de Cambio</a></li>
+        <!-- Otros enlaces -->
+    </ul>
+</div>
+
+<div class="container my-5">
+    <h4>Parámetros</h4>
+    <div class="border-top my-3"></div>
+    {% if ultima_tasa %}
+    <div class="row">
+        <h6>Tasas de Cambio</h6>
+        <div class="col"><p>Fecha: {{ ultima_tasa.fecha.strftime('%d/%m/%Y') }}</p></div>
+        <div class="col"><p>Tasa Oficial: {{ ultima_tasa.tasa_oficial }}</p></div>
+        <div class="col"><p>Tasa Compra: {{ ultima_tasa.tasa_compra }}</p></div>
+        <div class="col"><p>Tasa Venta: {{ ultima_tasa.tasa_venta }}</p></div>
+        <div class="col"><p>Tasa WU: {{ ultima_tasa.tasa_wu }}</p></div>
+    </div>
+    {% else %}
+        <p>No hay datos disponibles.</p>
+    {% endif %}
+</div>
+{% endblock %}

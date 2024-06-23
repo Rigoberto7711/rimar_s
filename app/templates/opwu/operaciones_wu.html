@@ -1,0 +1,730 @@
+{% extends 'base.html' %}
+
+{% block title %}Operaciones Airpak{% endblock %}
+{% block content %}
+
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="{{ category }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <div class="container my-5">
+        <label for="agencia" class="form-label">agencia W3</label>
+        <h4>Parámetros</h4>
+        <div class="border-top my-3"></div>
+        {% if ultima_tasa %}
+        <div class="row">
+            <h6>Tasas de Cambio</h6>
+            <div class="col"><p>Fecha: {{ ultima_tasa.fecha.strftime('%d/%m/%Y') }}</p></div>
+            <div class="col"><p>Tasa Oficial: {{ ultima_tasa.tasa_oficial }}</p></div>
+            <div class="col"><p>Tasa Compra: {{ ultima_tasa.tasa_compra }}</p></div>
+            <div class="col"><p>Tasa Venta: {{ ultima_tasa.tasa_venta }}</p></div>
+            <div class="col"><p>Tasa WU: {{ ultima_tasa.tasa_wu }}</p></div>
+        </div>
+        {% else %}
+            <p>No hay datos disponibles.</p>
+        {% endif %}
+    </div>
+
+    <h2>Operaciones Airpak</h2>
+    <form id="operacionesForm" action="{{ url_for('opwu.operaciones_wu') }}" method="post" class="d-flex flex-column">
+        <!-- Agrega aquí tu formulario -->
+
+        <div class="form-group">
+            <label for="tipo_operacion">Tipo de operacion</label>
+            <select class="form-control" id="tipo_operacion" name="tipo_operacion">
+                <option value="egreso">egreso</option>
+                <option value="ingreso">ingreso</option>
+            </select>
+
+            <label for="transaccion">Transaccion Contable</label>
+            <select class="form-control" id="transaccion" name="transaccion">
+                <option value="pago_remesa_wu_us">Pago de Remesa WU US</option>
+                <option value="pago_remesa_wu_cs">Pago de Remesa WU CS</option>
+                <option value="envio_remesa_wu_us">Envio de Remesa WU US</option>
+                <option value="envio_remesa_wu_cs">Envio de Remesa WU CS</option>                
+            </select>
+        </div>
+
+        <h3>Monto Transaccionado US</h3>
+        <div class="form-group">         
+            <input type="number" class="form-control" id="montotrus" name="montotrus" placeholder="Monto de la Transaccion Dolares" step="any"> <!--required value="0"--> 
+            <input type="number" class="form-control" id="montopus" name="montopus" placeholder="Monto Pago en Dolares" step="any">  <!--required value="0"-->
+        
+            <h3>Monto Transaccionado CS</h3>
+            <div class="mb-3">
+                <input type="number" id="montotrcs" name="montotrcs" class="form-control" placeholder="Monto de la Transaccion en Cordobas">
+                <input type="number" id="montopcs" name="montopcs" class="form-control" placeholder="Monto a pagar en Cordobas" step="any">
+                <input type="hidden" id="montopcs_hidden" name="montopcs_hidden">
+            </div>
+        </div>
+
+        <div class="container">    
+            <h4>Detalles de Monedas</h4>
+            <div class="row">
+                <!-- Entradas CS -->
+                <div class="col">
+                    <h4>Entradas CS</h4>            
+                        <div class="form-group row">
+                            <label for="montoi_1000_CS" class="col-sm-4 col-form-label">1000_CS</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="montoi_1000_CS" name="montoi_1000_CS" value="0">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="montoi_500_CS" class="col-sm-4 col-form-label">500_CS</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="montoi_500_CS" name="montoi_500_CS" value="0"> 
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="montoi_200_CS" class="col-sm-4 col-form-label">200_CS</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="montoi_200_CS" name="montoi_200_CS" value="0">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="montoi_100_CS" class="col-sm-4 col-form-label">100_CS</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="montoi_100_CS" name="montoi_100_CS" value="0">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="montoi_50_CS" class="col-sm-4 col-form-label">50_CS</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="montoi_50_CS" name="montoi_50_CS" value="0">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="montoi_20_CS" class="col-sm-4 col-form-label">20_CS</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="montoi_20_CS" name="montoi_20_CS" value="0">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="montoi_10_CS" class="col-sm-4 col-form-label">10_CS</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="montoi_10_CS" name="montoi_10_CS" value="0">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="montoi_5_CS" class="col-sm-4 col-form-label">5_CS</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="montoi_5_CS" name="montoi_5_CS" value="0">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="montoi_1_CS" class="col-sm-4 col-form-label">1_CS</label>
+                            <div class="col-sm-8">
+                                <input type="text" class="form-control" id="montoi_1_CS" name="montoi_1_CS" value="0">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="total_entradas_CS" class="col-sm-4 col-form-label">Total Entradas CS</label>
+                            <div class="col-sm-8">
+                                <!--<input type="text" class="form-control" id="total_entradas_CS" disabled>   -->                                 
+                                <input type="hidden" id="total_entradas_CS" name="total_entradas_CS">
+                                <input type="text" class="form-control" id="total_entradas_CS_display" disabled>                    
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="cambioi_CS" class="col-sm-4 col-form-label">Cambio CS</label>
+                            <div class="col-sm-8">
+                                <input type="hidden" id="cambioi_CS" name="cambioi_CS">
+                                <input type="text" class="form-control" id="cambioi_CS_display" disabled>                        
+                            </div>
+                        </div>
+                    
+                </div>
+        
+                <!-- Salidas CS -->
+                <div class="col">
+                    <h4>Salidas CS</h4>
+                    <!-- Agregar contenido similar al de "Entradas CS" ajustando los IDs y nombres de los inputs -->
+                    <div class="form-group row">
+                        <label for="montos_1000_CS" class="col-sm-4 col-form-label">1000_CS</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montos_1000_CS" name="montos_1000_CS" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montos_500_CS" class="col-sm-4 col-form-label">500_CS</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montos_500_CS" name="montos_500_CS" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montos_200_CS" class="col-sm-4 col-form-label">200_CS</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montos_200_CS" name="montos_200_CS" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montos_100_CS" class="col-sm-4 col-form-label">100_CS</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montos_100_CS" name="montos_100_CS" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montos_50_CS" class="col-sm-4 col-form-label">50_CS</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montos_50_CS" name="montos_50_CS" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montos_20_CS" class="col-sm-4 col-form-label">20_CS</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montos_20_CS" name="montos_20_CS" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montos_10_CS" class="col-sm-4 col-form-label">10_CS</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montos_10_CS" name="montos_10_CS" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montos_5_CS" class="col-sm-4 col-form-label">5_CS</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montos_5_CS" name="montos_5_CS" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montos_1_CS" class="col-sm-4 col-form-label">1_CS</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montos_1_CS" name="montos_1_CS" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="total_salidas_CS" class="col-sm-4 col-form-label">Total Salidas CS</label>
+                        <div class="col-sm-8">
+                            <input type="hidden" id="total_Salidas_CS" name="total_Salidas_CS">
+                            <input type="text" class="form-control" id="total_Salidas_CS_display" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="ajuste_CS" class="col-sm-4 col-form-label">Ajuste CS</label>
+                        <div class="col-sm-8">
+                            <input type="number" id="ajuste_CS" name="ajuste_CS" step="any" class="form-control">                                  
+                        </div>
+                    </div>
+                    <!-- Nuevo campo calculado total-operacion -->
+                    <div class="form-group row">
+                        <label for="total-operacion" class="col-sm-4 col-form-label">Total Operación</label>
+                        <div class="col-sm-8">
+                            <input type="number" id="total-operacion" name="total-operacion" class="form-control" disabled>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Entradas US -->
+                <div class="col">
+                    <h4>Entradas US</h4>
+                    <div class="form-group row">
+                        <label for="montoE_100_US" class="col-sm-4 col-form-label">100_US</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montoE_100_US" name="montoE_100_US" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montoE_50_US" class="col-sm-4 col-form-label">50_US</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montoE_50_US" name="montoE_50_US" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montoE_20_US" class="col-sm-4 col-form-label">20_US</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montoE_20_US" name="montoE_20_US" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montoE_10_US" class="col-sm-4 col-form-label">10_US</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montoE_10_US" name="montoE_10_US" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montoE_5_US" class="col-sm-4 col-form-label">5_US</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montoE_5_US" name="montoE_5_US" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montoE_1_US" class="col-sm-4 col-form-label">1_US</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montoE_1_US" name="montoE_1_US" value="0">
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="total_entradas_US" class="col-sm-4 col-form-label">Total Entradas US</label>
+                        <div class="col-sm-8">
+                            <input type="hidden" id="total_entradas_US" name="total_entradas_US">
+                            <input type="text" class="form-control" id="total_entradas_US_display" disabled>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label for="cambioE_US" class="col-sm-4 col-form-label">CambioE US</label>
+                        <div class="col-sm-8">
+                            <input type="hidden" id="cambioE_US" name="cambioE_US"> 
+                            <input type="text" class="form-control" id="cambioE_US_display" disabled>                                                  
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Salidas US -->
+                <div class="col">
+                    <h4>Salidas US</h4>
+                    <!-- Agregar contenido similar al de "Entradas US" ajustando para las salidas -->
+                    <div class="form-group row">
+                        <label for="montoP_100_US" class="col-sm-4 col-form-label">100_US</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montoP_100_US" name="montoP_100_US" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montoP_50_US" class="col-sm-4 col-form-label">50_US</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montoP_50_US" name="montoP_50_US" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montoP_20_US" class="col-sm-4 col-form-label">20_US</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montoP_20_US" name="montoP_20_US" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montoP_10_US" class="col-sm-4 col-form-label">10_US</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montoP_10_US" name="montoP_10_US" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montoP_5_US" class="col-sm-4 col-form-label">5_US</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montoP_5_US" name="montoP_5_US" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="montoP_1_US" class="col-sm-4 col-form-label">1_US</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="montoP_1_US" name="montoP_1_US" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="total_salidas_US" class="col-sm-4 col-form-label">Total Salidas US</label>
+                        <div class="col-sm-8">
+                            <input type="hidden" id="total_salidas_US" name="total_salidas_US">
+                            <input type="text" class="form-control" id="total_salidas_US_display" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="ajuste_US" class="col-sm-4 col-form-label">Ajuste US</label>
+                        <div class="col-sm-8">
+                            <input type="number" id="ajuste_US" name="ajuste_US" step="any" class="form-control">                          
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="total-operacion_us" class="col-sm-4 col-form-label">Total Operación US</label>
+                        <div class="col-sm-8">
+                            <input type="number" id="total-operacion_us" name="total-operacion_us" class="form-control" disabled>
+                        </div>
+                    </div>
+                </div> 
+
+
+        <div class="border-top my-3"></div>
+        <input type="submit" value="Guardar" class="btn btn-primary">
+    </form>
+</div>
+
+
+        <!-- Aqui se agrega la forma de calcular el monto por la tasa-->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Asigna tus tasas de Jinja a JavaScript
+                const tasaCompra = {{ ultima_tasa.tasa_compra }};
+                const tasaVenta = {{ ultima_tasa.tasa_venta }};
+
+                // Encuentra los elementos relevantes
+                const tipoOperacionEl = document.getElementById('tipo_operacion');
+                const montoTrUsEl = document.getElementById('montotrus');
+                const montoUsEl = document.getElementById('montopus');
+                // Campo para sumar al cálculo
+                const montoTrCsEl = document.getElementById('montotrcs');
+                // Campo donde se muestra el resultado
+                const montoCsEl = document.getElementById('montopcs');
+                const montoCsHiddenEl = document.getElementById('montopcs_hidden');
+                const ajusteCSEl = document.getElementById('ajuste_CS');
+                const totalOperacionEl = document.getElementById('total-operacion');
+
+                // Define una función para calcular, sumar y actualizar el monto en córdobas
+                function calcularYActualizarMonto() {            
+                    const montoTrUs = parseFloat(montoTrUsEl.value);
+                    const montoUs = parseFloat(montoUsEl.value);
+                    const montoTrCs = parseFloat(montoTrCsEl.value) || 0; // Asume 0 si el campo está vacío
+                    const tipoOperacion = tipoOperacionEl.value;
+                    let diferencia = montoTrUs - montoUs; // Calcula la diferencia
+                    //let montoCs = 0;
+
+                    // Si la diferencia es negativa, establece el resultado en 0 y retorna
+                    if (diferencia < 0) {
+                        montoCsEl.value = '0';
+                        montoCsHiddenEl.value = '0';
+                        return; // Termina la ejecución de la función aquí
+                    }
+                    let montoCs = 0;
+
+                    // Verifica si es una operación de egreso y montoTrUs < montoUs
+                    if (tipoOperacion === 'egreso' && diferencia < 0) {
+                        montoCs = Math.abs(diferencia) * tasaVenta; // Usa la tasaVenta para la diferencia negativa
+                    } else {
+                        // Procede según el tipo de operación si no se cumple la condición específica para 'egreso'
+                        if (!isNaN(diferencia)) {
+                            if (tipoOperacion === 'ingreso') {
+                                montoCs = diferencia * tasaVenta;
+                            } else if (tipoOperacion === 'egreso') {
+                                montoCs = diferencia >= 0 ? diferencia * tasaCompra : 0; // Usa tasaCompra si diferencia es positiva o 0 si es negativa
+                            }
+                        }
+                    }
+
+                    // Suma el valor del campo montotrcs al resultado del cálculo
+                    montoCs += montoTrCs;
+                    montoCsEl.value = montoCs.toFixed(2);
+                    montoCsHiddenEl.value = montoCs.toFixed(2);
+                    document.getElementById('montopcs_display').value = montoCs.toFixed(2);
+                    calcularCambioICS();                    
+                    calcularAjusteCS();
+                    calcularCambioEUS(); 
+                    calcularAjusteUS();                                      
+                }
+
+                // Escucha cambios en los campos relevantes para actualizar el cálculo
+                montoTrUsEl.addEventListener('input', calcularYActualizarMonto);
+                montoUsEl.addEventListener('input', calcularYActualizarMonto);
+                montoTrCsEl.addEventListener('input', calcularYActualizarMonto); // Incluye este campo en la escucha
+                tipoOperacionEl.addEventListener('change', calcularYActualizarMonto);
+                ajusteCSEl.addEventListener('input', calcularAjusteCS); // Incluye este campo en la escucha
+
+                calcularCambioICS();
+                calcularAjusteCS();
+                calcularCambioEUS();
+                calcularAjusteUS();
+            });
+
+            function calcularTotalEntradasCS() {           
+                // Obtener los valores de los campos
+                const valor1000CS = document.getElementById('montoi_1000_CS').value || 0;
+                const valor500CS = document.getElementById('montoi_500_CS').value || 0;
+                const valor200CS = document.getElementById('montoi_200_CS').value || 0;
+                const valor100CS = document.getElementById('montoi_100_CS').value || 0;
+                const valor50CS = document.getElementById('montoi_50_CS').value || 0;
+                const valor20CS = document.getElementById('montoi_20_CS').value || 0;
+                const valor10CS = document.getElementById('montoi_10_CS').value || 0;
+                const valor5CS = document.getElementById('montoi_5_CS').value || 0;
+                const valor1CS = document.getElementById('montoi_1_CS').value || 0;
+                // Realizar el cálculo
+                const total = (1000 * parseFloat(valor1000CS)) + (500 * parseFloat(valor500CS)) + (200 * parseFloat(valor200CS)) + (100 * parseFloat(valor100CS)) + (50 * parseFloat(valor50CS)) + (20 * parseFloat(valor20CS)) + (10 * parseFloat(valor10CS)) + (5 * parseFloat(valor5CS)) + (1 * parseFloat(valor1CS));
+        
+                // Mostrar el resultado en el campo total_entradas_CS
+                document.getElementById('total_entradas_CS').value = total;
+                document.getElementById('total_entradas_CS_display').value = total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        
+                calcularCambioICS(); // Calcular cambio después de actualizar total entradas CS
+                calcularAjusteCS();
+                calcularCambioEUS();
+                calcularAjusteUS();
+            }
+        
+            function calcularTotalSalidasCS() {
+                // Obtiene los valores de los campos
+                const valor1000CS = document.getElementById('montos_1000_CS').value || 0;
+                const valor500CS = document.getElementById('montos_500_CS').value || 0;
+                const valor200CS = document.getElementById('montos_200_CS').value || 0;
+                const valor100CS = document.getElementById('montos_100_CS').value || 0;
+                const valor50CS = document.getElementById('montos_50_CS').value || 0;
+                const valor20CS = document.getElementById('montos_20_CS').value || 0;
+                const valor10CS = document.getElementById('montos_10_CS').value || 0;
+                const valor5CS = document.getElementById('montos_5_CS').value || 0;
+                const valor1CS = document.getElementById('montos_1_CS').value || 0;
+        
+                // Realiza el cálculo
+                const total = (1000 * parseFloat(valor1000CS)) + (500 * parseFloat(valor500CS)) + (200 * parseFloat(valor200CS)) + (100 * parseFloat(valor100CS)) + (50 * parseFloat(valor50CS)) + (20 * parseFloat(valor20CS)) + (10 * parseFloat(valor10CS)) + (5 * parseFloat(valor5CS)) + (1 * parseFloat(valor1CS));
+        
+                // Muestra el resultado en el campo 'total_salidas_CS'
+                document.getElementById('total_Salidas_CS').value = total;
+                document.getElementById('total_Salidas_CS_display').value = total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}); // Formatea el total a 2 decimales
+        
+                calcularCambioICS(); // Calcular cambio después de actualizar total salidas CS
+                calcularAjusteCS();
+                calcularCambioEUS();
+                calcularAjusteUS();
+            }
+        
+            function calcularCambioICS() {
+                // Obtener los valores de los campos
+                const totalEntradasCS = parseFloat(document.getElementById('total_entradas_CS').value) || 0;
+                const totalSalidasCS = parseFloat(document.getElementById('total_Salidas_CS').value) || 0;
+                const montoPCS = parseFloat(document.getElementById('montopcs').value) || 0;
+                const tipoOperacion = document.getElementById('tipo_operacion').value;
+        
+                // Calcular la diferencia basada en el tipo de operación
+                let cambioICS;
+                if (tipoOperacion === 'ingreso') {
+                    cambioICS = montoPCS - totalEntradasCS + totalSalidasCS;
+                } else if (tipoOperacion === 'egreso') {
+                    cambioICS = montoPCS - totalSalidasCS + totalEntradasCS;
+                }
+        
+                // Mostrar el resultado en el campo cambioi_CS_display
+                document.getElementById('cambioi_CS_display').value = cambioICS.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('cambioi_CS').value = cambioICS; // Guardar en campo oculto para envío al backend
+            }
+
+            function calcularAjusteCS() {
+                // Obtener los valores de los campos
+                const totalEntradasCS = parseFloat(document.getElementById('total_entradas_CS').value) || 0;
+                const totalSalidasCS = parseFloat(document.getElementById('total_Salidas_CS').value) || 0;
+                const montoPCS = parseFloat(document.getElementById('montopcs').value) || 0;
+                const tipoOperacion = document.getElementById('tipo_operacion').value;
+        
+                // Calcular la diferencia basada en el tipo de operación
+                let ajusteCS;
+                if (tipoOperacion === 'ingreso') {
+                    ajusteCS = totalEntradasCS - montoPCS - totalSalidasCS;
+                } else if (tipoOperacion === 'egreso') {
+                    ajusteCS = totalSalidasCS - montoPCS - totalEntradasCS;
+                }
+        
+                // Guardar en campo oculto para envío al backend
+                document.getElementById('ajuste_CS').value = ajusteCS; 
+
+                // Calcular el total de la operación
+                calcularTotalOperacion();
+                calcularCambioEUS();
+                calcularAjusteUS();
+            }
+
+            function calcularTotalOperacion() {
+                const montoPCS = parseFloat(document.getElementById('montopcs').value) || 0;
+                const ajusteCS = parseFloat(document.getElementById('ajuste_CS').value) || 0;
+                const totalOperacion = montoPCS + ajusteCS;
+                document.getElementById('total-operacion').value = totalOperacion.toFixed(2);
+            }
+
+            function validarFormulario(event) {
+                const ajusteCS = parseFloat(document.getElementById('ajuste_CS').value) || 0;
+                if (ajusteCS > 5 || ajusteCS < -5) {
+                    alert("El valor del ajuste no debe ser mayor ni menor que 5, favor revisar detalle de moneda");
+                    event.preventDefault(); // Evita el envío del formulario
+                }
+                if (montotrus === "") {
+                    alert("El campo 'Monto de la Transacción Dólares' no puede estar vacío");
+                    event.preventDefault(); // Evita el envío del formulario
+                }
+                if (montopus === "") {
+                    alert("El campo 'Monto Pago en Dólares' no puede estar vacío");
+                    event.preventDefault(); // Evita el envío del formulario
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                // Escuchar cambios en los campos para recalcular
+                document.getElementById('montoi_1000_CS').addEventListener('input', calcularTotalEntradasCS);
+                document.getElementById('montoi_500_CS').addEventListener('input', calcularTotalEntradasCS);
+                document.getElementById('montoi_200_CS').addEventListener('input', calcularTotalEntradasCS);
+                document.getElementById('montoi_100_CS').addEventListener('input', calcularTotalEntradasCS);
+                document.getElementById('montoi_50_CS').addEventListener('input', calcularTotalEntradasCS);
+                document.getElementById('montoi_20_CS').addEventListener('input', calcularTotalEntradasCS);
+                document.getElementById('montoi_10_CS').addEventListener('input', calcularTotalEntradasCS);
+                document.getElementById('montoi_5_CS').addEventListener('input', calcularTotalEntradasCS);
+                document.getElementById('montoi_1_CS').addEventListener('input', calcularTotalEntradasCS);
+        
+                document.getElementById('montos_1000_CS').addEventListener('input', calcularTotalSalidasCS);
+                document.getElementById('montos_500_CS').addEventListener('input', calcularTotalSalidasCS);
+                document.getElementById('montos_200_CS').addEventListener('input', calcularTotalSalidasCS);
+                document.getElementById('montos_100_CS').addEventListener('input', calcularTotalSalidasCS);
+                document.getElementById('montos_50_CS').addEventListener('input', calcularTotalSalidasCS);
+                document.getElementById('montos_20_CS').addEventListener('input', calcularTotalSalidasCS);
+                document.getElementById('montos_10_CS').addEventListener('input', calcularTotalSalidasCS);
+                document.getElementById('montos_5_CS').addEventListener('input', calcularTotalSalidasCS);
+                document.getElementById('montos_1_CS').addEventListener('input', calcularTotalSalidasCS);
+        
+                // Calcular cambio cuando montopcs o tipo_operacion cambia
+                document.getElementById('montopcs').addEventListener('input', calcularCambioICS);
+                document.getElementById('tipo_operacion').addEventListener('change', calcularCambioICS);
+                document.getElementById('ajuste_CS').addEventListener('input', calcularAjusteCS);
+
+                // Validación del formulario al enviar
+                document.getElementById('operacionesForm').addEventListener('submit', validarFormulario);
+                
+                // Inicializar los valores calculados
+                calcularTotalEntradasCS();
+                calcularTotalSalidasCS();
+                calcularCambioICS();
+                calcularAjusteCS();
+                calcularCambioEUS();
+                calcularAjusteUS();
+            });
+        </script>
+
+        <script>
+            document.getElementById('operacionesForm').addEventListener('submit', function(event) {
+                let montotrus = document.getElementById('montotrus').value;
+                let montopus = document.getElementById('montopus').value;
+                let montotrcs = document.getElementById('montotrcs').value;
+                let montopcs = document.getElementById('montopcs').value;
+                let ajuste_CS = document.getElementById('ajuste_CS').value;
+    
+                if (!montotrus || !montopus || !montotrcs || !montopcs) {
+                    alert('Todos los campos de monto deben ser completados.');
+                    event.preventDefault();
+                    return;
+                }
+    
+                if (isNaN(parseFloat(montotrus)) || isNaN(parseFloat(montopus)) || isNaN(parseFloat(montotrcs)) || isNaN(parseFloat(montopcs))) {
+                    alert('Todos los campos de monto deben ser valores numéricos.');
+                    event.preventDefault();
+                    return;
+                }
+    
+                let ajuste_CS_num = parseFloat(ajuste_CS);
+                if (isNaN(ajuste_CS_num) || ajuste_CS_num > 5 || ajuste_CS_num < -5) {
+                    alert('El valor del ajuste en Cordobas no debe ser mayor ni menor que 5, favor revisar detalle de moneda.');
+                    event.preventDefault();
+                    return;
+                }
+
+                let ajuste_US = parseFloat(document.getElementById('ajuste_US').value) || 0;
+                if (ajuste_US > 1 || ajuste_US < -1) {
+                    alert('El valor del ajuste en Dólares no debe ser ni mayor ni menor que "UNO" favor revise el detalle de Moneda');
+                    event.preventDefault();
+                    return;
+                }
+            });
+        </script>
+
+    <script>
+    function calcularTotalEntradasUS() {
+        const valor100US = document.getElementById('montoE_100_US').value || 0;
+        const valor50US = document.getElementById('montoE_50_US').value || 0;
+        const valor20US = document.getElementById('montoE_20_US').value || 0;
+        const valor10US = document.getElementById('montoE_10_US').value || 0;
+        const valor5US = document.getElementById('montoE_5_US').value || 0;
+        const valor1US = document.getElementById('montoE_1_US').value || 0;
+    
+        const total = (100 * parseFloat(valor100US)) + (50 * parseFloat(valor50US)) + (20 * parseFloat(valor20US)) + (10 * parseFloat(valor10US)) + (5 * parseFloat(valor5US)) + (1 * parseFloat(valor1US));
+        document.getElementById('total_entradas_US').value = total;
+        document.getElementById('total_entradas_US_display').value = total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    
+        calcularCambioEUS();
+        calcularAjusteUS();
+    }
+
+    function calcularCambioEUS() {
+        // Obtener los valores de los campos
+        const totalEntradasUS = parseFloat(document.getElementById('total_entradas_US').value) || 0;
+        const totalSalidasUS = parseFloat(document.getElementById('total_salidas_US').value) || 0;
+        const montoPUS = parseFloat(document.getElementById('montopus').value) || 0;
+        const tipoOperacion = document.getElementById('tipo_operacion').value;
+
+        // Calcular la diferencia basada en el tipo de operación
+        let cambioE_US;
+        if (tipoOperacion === 'ingreso') {
+            cambioE_US = montoPUS - totalEntradasUS + totalSalidasUS;
+        } else if (tipoOperacion === 'egreso') {
+            cambioE_US = montoPUS - totalSalidasUS + totalEntradasUS;
+        }
+
+        // Mostrar el resultado en el campo cambioE_US_display
+        document.getElementById('cambioE_US_display').value = cambioE_US.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('cambioE_US').value = cambioE_US; // Guardar en campo oculto para envío al backend
+    }
+
+    function calcularAjusteUS() {
+        // Obtener los valores de los campos
+        const totalEntradasUS = parseFloat(document.getElementById('total_entradas_US').value) || 0;
+        const totalSalidasUS = parseFloat(document.getElementById('total_salidas_US').value) || 0;
+        const montoPUS = parseFloat(document.getElementById('montopus').value) || 0;
+        const tipoOperacion = document.getElementById('tipo_operacion').value;
+
+        // Calcular la diferencia basada en el tipo de operación
+        let ajusteUS;
+        if (tipoOperacion === 'ingreso') {
+            ajusteUS = totalEntradasUS - montoPUS - totalSalidasUS;
+        } else if (tipoOperacion === 'egreso') {
+            ajusteUS = totalSalidasUS - montoPUS - totalEntradasUS;
+        }
+
+        // Guardar en campo oculto para envío al backend
+        document.getElementById('ajuste_US').value = ajusteUS; 
+
+        // Calcular el total de la operación
+        calcularTotalOperacionUS();
+        calcularCambioEUS();
+        calcularAjusteUS();
+    }
+
+    function calcularTotalOperacionUS() {
+        const montoPUS = parseFloat(document.getElementById('montopus').value) || 0;
+        const ajusteUS = parseFloat(document.getElementById('ajuste_US').value) || 0;
+        const totalOperacionUS = montoPUS + ajusteUS;
+        document.getElementById('total-operacion_us').value = totalOperacionUS.toFixed(2);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('montoE_100_US').addEventListener('input', calcularTotalEntradasUS);
+        document.getElementById('montoE_50_US').addEventListener('input', calcularTotalEntradasUS);
+        document.getElementById('montoE_20_US').addEventListener('input', calcularTotalEntradasUS);
+        document.getElementById('montoE_10_US').addEventListener('input', calcularTotalEntradasUS);
+        document.getElementById('montoE_5_US').addEventListener('input', calcularTotalEntradasUS);
+        document.getElementById('montoE_1_US').addEventListener('input', calcularTotalEntradasUS);
+    });
+    </script>  
+    
+    <script>
+        function calcularTotalSalidasUS() {
+            const valor100US = document.getElementById('montoP_100_US').value || 0;
+            const valor50US = document.getElementById('montoP_50_US').value || 0;
+            const valor20US = document.getElementById('montoP_20_US').value || 0;
+            const valor10US = document.getElementById('montoP_10_US').value || 0;
+            const valor5US = document.getElementById('montoP_5_US').value || 0;
+            const valor1US = document.getElementById('montoP_1_US').value || 0;
+        
+            const total = (100 * parseFloat(valor100US)) + (50 * parseFloat(valor50US)) + (20 * parseFloat(valor20US)) + (10 * parseFloat(valor10US)) + (5 * parseFloat(valor5US)) + (1 * parseFloat(valor1US));
+            
+            document.getElementById('total_salidas_US').value = total;
+            document.getElementById('total_salidas_US_display').value = total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        
+            calcularAjusteUS();
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('montoP_100_US').addEventListener('input', calcularTotalSalidasUS);
+            document.getElementById('montoP_50_US').addEventListener('input', calcularTotalSalidasUS);
+            document.getElementById('montoP_20_US').addEventListener('input', calcularTotalSalidasUS);
+            document.getElementById('montoP_10_US').addEventListener('input', calcularTotalSalidasUS);
+            document.getElementById('montoP_5_US').addEventListener('input', calcularTotalSalidasUS);
+            document.getElementById('montoP_1_US').addEventListener('input', calcularTotalSalidasUS);
+
+            document.getElementById('tipo_operacion').addEventListener('change', calcularCambioEUS);
+            document.getElementById('total_salidas_US').addEventListener('input', calcularCambioEUS);
+            document.getElementById('montopus').addEventListener('input', calcularCambioEUS);
+            document.getElementById('ajuste_US').addEventListener('input', calcularAjusteUS);
+
+            calcularCambioEUS();
+            calcularAjusteUS();
+        });        
+    </script>
+{% endblock %}
+

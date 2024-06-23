@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Calcular Cambio{% endblock %}
+{% block content %}
+<div class="container my-5 shadow p-3">
+    <h2>Calcular Cambio</h2>
+    <div class="border-top my-3"></div>
+    <form method="POST">
+        <div class="form-group">
+            <label for="tipo_cambio">Tipo de Cambio</label>
+            <select class="form-control" id="tipo_cambio" name="tipo_cambio">
+                <option value="compra">Compra</option>
+                <option value="venta">Venta</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="monto">Monto</label>
+            <input type="text" class="form-control" id="monto" name="monto" step="any" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Calcular</button>
+    </form>
+    {% if resultado %}
+    <div class="alert alert-info mt-3">
+        <strong>Resultado:</strong> {{ resultado }} para tipo de cambio {{ tipo_cambio }}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

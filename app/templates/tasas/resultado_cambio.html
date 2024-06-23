@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Resultado Cambio{% endblock %}
+{% block content %}
+<div class="container my-5">
+    <h2>Resultado del Cambio</h2>
+    <div class="border-top my-3"></div>
+    <div class="container text-center">
+        <p>Tipo de Cambio: {{ tipo_cambio|capitalize }}</p>
+        <p>Monto Original: {{ monto }}</p>
+        <p>Cambio Calculado: {{ cambio }}</p>
+        <a href="{{ url_for('tasas.calcular_cambio') }}" class="btn btn-primary">Calcular otro cambio</a>
+    </div>
+</div>
+{% endblock %}

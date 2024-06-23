@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Definir Tasas Diarias{% endblock %}
+{% block content %}
+<div class="container text-center my-5 border border-1 rounded p-5 shadow">
+    <h2>Definir Tasas Diarias</h2>
+    <div class="border-top my-3"></div>
+    <form action="{{ url_for('tasas.definir_tasas') }}" method="post" class="d-flex flex-column">
+        <div class="mb-3">
+            <label for="fecha" class="form-label">Fecha Actual</label>
+            <input type="text" id="fecha" name="fecha" class="form-control" placeholder="DD/MM/YYYY">
+        </div>
+        <div class="mb-3">
+            <label for="oficial" class="form-label">Tasa de Cambio Oficial</label>
+            <input type="text" id="oficial" name="oficial" class="form-control" placeholder="Emitida por Banco Central (1 Dolar = X Córdoba)">
+        </div>
+        <div class="mb-3">
+            <label for="compra" class="form-label">Tasa de Compra</label>
+            <input type="text" id="compra" name="compra" class="form-control" placeholder="Tasa de Compra">
+        </div>
+        <div class="mb-3">
+            <label for="venta" class="form-label">Tasa de Venta</label>
+            <input type="text" id="venta" name="venta" class="form-control" placeholder="Tasa de Oferta">
+        </div>
+        <div class="mb-3">
+            <label for="WU" class="form-label">Tasa WU</label>
+            <input type="text" id="WU" name="WU" class="form-control" placeholder="Tasa Preferencial WU">
+        </div>
+        <div class="mb-3">
+            <label for="tc_bancos" class="form-label">Tasa de Compra Bancos</label>
+            <input type="text" id="tc_bancos" name="tc_bancos" class="form-control" placeholder="Tasa de compra Bancos">
+        </div>
+        <div class="mb-3">
+            <label for="tv_bancos" class="form-label">Tasa de Venta Bancos</label>
+            <input type="text" id="tv_bancos" name="tv_bancos" class="form-control" placeholder="Tasa de venta Bancos">
+        </div>
+        <div class="mb-3">
+            <label for="tp_banpro" class="form-label">Tasa Preferencial Banpro</label>
+            <input type="text" id="tp_banpro" name="tp_banpro" class="form-control" placeholder="Tasa Preferencial Banpro">
+        </div>
+        <div class="mb-3">
+            <label for="tp_LaFise" class="form-label">Tasa Preferencial La Fise</label>
+            <input type="text" id="tp_LaFise" name="tp_LaFise" class="form-control" placeholder="Tasa Preferencial La Fise">
+        </div>
+        <div class="border-top my-3"></div>
+        <input type="submit" value="Enviar" class="btn btn-primary">
+    </form>
+</div>
+{% endblock %}

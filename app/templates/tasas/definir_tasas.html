@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}Definir Tasas Diarias{% endblock %}
+{% block content %}
+<div class="container text-center my-5 border border-1 rounded p-5 shadow">
+    <h2>Definir Tasas Diarias</h2>
+    <div class="border-top my-3"></div>
+    <form action="{{ url_for('tasas.definir_tasas') }}" method="post" class="d-flex flex-column">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            {{ form.fecha.label(class="form-label") }}
+            {{ form.fecha(class="form-control", placeholder="DD/MM/YYYY") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.tasa_oficial.label(class="form-label") }}
+            {{ form.tasa_oficial(class="form-control", placeholder="Emitida por Banco Central (1 Dolar = X Córdoba)") }}
+        </div>
+        
+        <div class="mb-3">
+            {{ form.tasa_compra.label(class="form-label") }}
+            {{ form.tasa_compra(class="form-control", placeholder="Tasa de Compra") }}
+        </div>
+        
+        <div class="mb-3">
+            {{ form.tasa_venta.label(class="form-label") }}
+            {{ form.tasa_venta(class="form-control", placeholder="Tasa de Oferta") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.tasa_wu.label(class="form-label") }}
+            {{ form.tasa_wu(class="form-control", placeholder="Tasa Preferencial WU") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.tasac_bancos.label(class="form-label") }}
+            {{ form.tasac_bancos(class="form-control", placeholder="Tasa de Compra Bancos") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.tasav_bancos.label(class="form-label") }}
+            {{ form.tasav_bancos(class="form-control", placeholder="Tasa de Venta Bancos") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.tasap_banpro.label(class="form-label") }}
+            {{ form.tasap_banpro(class="form-control", placeholder="Tasa Preferencial Banpro") }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.tasap_lafise.label(class="form-label") }}
+            {{ form.tasap_lafise(class="form-control", placeholder="Tasa Preferencial La fise") }}
+        </div>
+
+        <div class="border-top my-3"></div>
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+</div>
+{% endblock %}
